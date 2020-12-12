@@ -1,23 +1,29 @@
 <template>
 <div>
     <v-expansion-panels>
-        <v-expansion-panel v-for="(item,i) in names" :key="i">
+        <v-expansion-panel v-for="(group,gindex) in groups" :key="`groups-${gindex}`">
             <v-expansion-panel-header>
-                {{item.G}} {{i}}
-                <!-- {{item}} -->
+                {{group}}
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <div v-for="(item2,i2) in item.B" :key="i2">
-                {{item2.N}} {{i2}}
-                <!-- {{dataValue[i2]}} -->
-              </div>
+                <div v-for="(product,pindex) in products" :key="`products-${pindex}`">
+                    <div v-if="group == product.group_name" class="d-flex flex-row align-center justify-space-between">
+                    <div class="d-flex flex-row align-center">
+                        <h3>
+                            {{product.name}}
+                        </h3>
+                        <span class="pl-1">
+                            ({{product.P}})
+                        </span>
+                    </div>
+                        <span>
+                            {{product.C}} BYN
+                        </span>
+                    </div>
+                </div>
             </v-expansion-panel-content>
         </v-expansion-panel>
     </v-expansion-panels>
-    {{names}}
-    <br/>
-    <br/>
-    {{dataValue}}
 </div>
 </template>
 
@@ -29,13 +35,33 @@ export default {
     async asyncData({
         req
     }) {
-        const data = await getData()
-        const names = await getNames()
-        const dataValue = data.Value.Goods
+        var data = await getData()
+        var names = await getNames()
+        var dataValue = data.Value.Goods
+        var products = []
+        var groups = []
+
+        function computedList() {
+            dataValue.forEach(dv => {
+                let item = {
+                    ...dv
+                }
+                let dollar_rate = 2.55
+                item.name = names[item.G].B[item.T].N
+                item.group_name = names[item.G].G
+                item.current_price = item.C * dollar_rate
+                item.previos_price = 0
+                if (!(groups.includes(item.group_name))) {
+                    groups.push(item.group_name)
+                }
+                products.push(item)
+            })
+        }
+        await computedList()
 
         return {
-            dataValue,
-            names,
+            products: products,
+            groups: groups,
         }
     }
 }
