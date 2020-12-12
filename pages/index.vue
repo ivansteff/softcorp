@@ -21,7 +21,7 @@
                         Количество
                     </div>
                     <div class="product_price">
-                        Цена
+                        Цена (BYN)
                     </div>
                 </div>
                 <div v-for="(product,index) in getItemList" :key="`product-${index}`" class="d-flex flex-row justify-space-between px-4 py-3 product-item">
@@ -29,25 +29,25 @@
                         {{product.name}}
                     </div>
                     <div class="product_counter">
-                        {{product.quantity_in_basket}}
+                        {{product.quantity_in_basket}} шт.
                     </div>
                     <div class="product_price justify-space-between">
                         <div>
-                            {{product.current_price.toFixed(2)}}
+                            {{product.current_price.toFixed(2)}} / шт.
                         </div>
                         <div class="delete-product curp" @click="decrementProduct(index)">
                             Удалить
                         </div>
                     </div>
                 </div>
-                <v-divider/>
-                <div class="total-sum py-3">
-                    <p class="pr-15">
-                        Итого : 
-                    </p>
-                    <p>
-                        {{getTotalSum}}
-                    </p>
+                <v-divider />
+                <div class="d-flex flex-row justify-space-between px-4 py-3">
+                    <div>
+                        Курс доллара: 1$ = {{dollar_rate}} BYN
+                    </div>
+                    <div>
+                        Итого : {{getTotalSum}} BYN
+                    </div>
                 </div>
             </div>
             <div v-else class="px-4">
@@ -61,9 +61,9 @@
     <v-expansion-panels v-model="groups_counter" multiple>
         <v-expansion-panel v-for="(group,gindex) in groups" :key="`groups-${gindex}`">
             <v-expansion-panel-header>
-            <h3>
-                {{group}}
-            </h3>
+                <h3>
+                    {{group}}
+                </h3>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
                 <div v-for="(product,pindex) in products" :key="`products-${pindex}`" @click="addToBasket(product)" class="product">
@@ -77,7 +77,7 @@
                             </span>
                         </div>
                         <span>
-                            {{product.C}} BYN
+                            {{product.C}} $
                         </span>
                     </div>
                 </div>
@@ -103,13 +103,13 @@ export default {
         var products = []
         var groups = []
         var groups_counter = []
+        let dollar_rate = 2.55
 
         function computedList() {
             dataValue.forEach((dv, index) => {
                 let item = {
                     ...dv
                 }
-                let dollar_rate = 2.55
                 item.name = names[item.G].B[item.T].N
                 item.group_name = names[item.G].G
                 item.current_price = item.C * dollar_rate
@@ -127,6 +127,7 @@ export default {
             products: products,
             groups: groups,
             groups_counter: groups_counter,
+            dollar_rate: dollar_rate,
         }
     },
     methods: {
@@ -159,12 +160,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-.curp{
+.curp {
     cursor: pointer;
 }
 
-.total-sum{
+.total-sum {
     width: 75%;
     display: flex;
     justify-content: flex-end;
@@ -194,9 +194,10 @@ export default {
         justify-content: space-between;
     }
 
-    &-item{
+    &-item {
         transition: .3s;
-        &:hover{
+
+        &:hover {
             background-color: rgba($color: #000000, $alpha: .3);
         }
     }

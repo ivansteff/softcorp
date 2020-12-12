@@ -7,7 +7,6 @@ export const actions = {
     let fined = context.state.items_list.findIndex((item)=>{
         return item.T == payload.T
     })
-    console.log(`fined`, fined)
     if (fined !== -1) {
         context.commit('INCREMENT_ITEM', fined)
     } else {
@@ -27,10 +26,8 @@ export const actions = {
 export const mutations = {
   ADD_ITEM(state, payload) {
       state.items_list.push(payload)
-      console.log(`state.items_list`, state.items_list)
   },
   INCREMENT_ITEM(state, payload) {
-      console.log(` state.items_list[payload]`,  state.items_list[payload])
       state.items_list[payload].quantity_in_basket++
   },
   DECREMENT_ITEM(state, payload) {
