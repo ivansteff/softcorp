@@ -1,6 +1,16 @@
 <template>
 <div>
-    <v-expansion-panels>
+    <div>
+        <v-card>
+            <v-card-title>
+                Корзина
+            </v-card-title>
+        </v-card>
+    </div>
+    <h1>
+        Каталог
+    </h1>
+    <v-expansion-panels v-model="groups_counter" multiple>
         <v-expansion-panel v-for="(group,gindex) in groups" :key="`groups-${gindex}`">
             <v-expansion-panel-header>
                 {{group}}
@@ -40,9 +50,10 @@ export default {
         var dataValue = data.Value.Goods
         var products = []
         var groups = []
+        var groups_counter = []
 
         function computedList() {
-            dataValue.forEach(dv => {
+            dataValue.forEach((dv, index) => {
                 let item = {
                     ...dv
                 }
@@ -56,13 +67,15 @@ export default {
                 }
                 products.push(item)
             })
+            groups_counter = [...Array(groups.length).keys()]
         }
         await computedList()
 
         return {
             products: products,
             groups: groups,
+            groups_counter: groups_counter,
         }
-    }
+    },
 }
 </script>
