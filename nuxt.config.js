@@ -11,7 +11,8 @@ export default {
       { hid: 'description', name: 'description', content: '' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Material+Icons' },
     ]
   },
 
@@ -68,7 +69,14 @@ export default {
           success: colors.green.accent3
         }
       }
-    }
+    },
+    defaultAssets: {
+  font: true,
+  icons: 'md'
+},
+icons: {
+  iconfont: 'md',
+}
   },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)

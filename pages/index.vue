@@ -2,17 +2,55 @@
 <div>
     <div>
         <v-card>
-            <v-card-title>
-                Корзина
+            <v-card-title class="d-flex flex-row justify-space-between">
+                <div>
+                    Корзина
+                </div>
+                <div v-if="getItemList.length > 0" @click="dropbasket()" class="curp">
+                    <v-icon>
+                        delete_forever
+                    </v-icon>
+                </div>
             </v-card-title>
             <div v-if="getItemList.length > 0">
-                <div v-for="(product,index) in getItemList" :key="`product-${index}`">
-                    <div>
-                        {{product}}
+                <div class="d-flex flex-row pb-2 px-4 w-100 justify-space-between">
+                    <div class="product_title">
+                        Наименование товара и описание
+                    </div>
+                    <div class="product_counter">
+                        Количество
+                    </div>
+                    <div class="product_price">
+                        Цена
                     </div>
                 </div>
+                <div v-for="(product,index) in getItemList" :key="`product-${index}`" class="d-flex flex-row justify-space-between px-4 py-3 product-item">
+                    <div class="product_title">
+                        {{product.name}}
+                    </div>
+                    <div class="product_counter">
+                        {{product.quantity_in_basket}}
+                    </div>
+                    <div class="product_price justify-space-between">
+                        <div>
+                            {{product.current_price.toFixed(2)}}
+                        </div>
+                        <div class="delete-product curp" @click="decrementProduct(index)">
+                            Удалить
+                        </div>
+                    </div>
+                </div>
+                <v-divider/>
+                <div class="total-sum py-3">
+                    <p class="pr-15">
+                        Итого : 
+                    </p>
+                    <p>
+                        {{getTotalSum}}
+                    </p>
+                </div>
             </div>
-            <div v-else>
+            <div v-else class="px-4">
                 Корзина пуста
             </div>
         </v-card>
@@ -23,15 +61,17 @@
     <v-expansion-panels v-model="groups_counter" multiple>
         <v-expansion-panel v-for="(group,gindex) in groups" :key="`groups-${gindex}`">
             <v-expansion-panel-header>
+            <h3>
                 {{group}}
+            </h3>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
                 <div v-for="(product,pindex) in products" :key="`products-${pindex}`" @click="addToBasket(product)" class="product">
-                    <div v-if="group == product.group_name" class="d-flex flex-row align-center justify-space-between">
+                    <div v-if="group == product.group_name" class="d-flex flex-row align-center justify-space-between pa-3 product-item">
                         <div class="d-flex flex-row align-center">
-                            <h3>
+                            <h4>
                                 {{product.name}}
-                            </h3>
+                            </h4>
                             <span class="pl-1">
                                 ({{product.P}})
                             </span>
@@ -55,9 +95,8 @@ import {
 } from "vuex";
 export default {
     async asyncData({
-        req, store
+        req,
     }) {
-        console.log(store.state)
         var data = await getData()
         var names = await getNames()
         var dataValue = data.Value.Goods
@@ -94,19 +133,72 @@ export default {
         addToBasket(product) {
             console.log(` addToBasket product`, product)
             this.$store.dispatch('basket/add_to_basket', product);
-        }
+        },
+        decrementProduct(index) {
+            this.$store.dispatch('basket/decrement_product', index);
+        },
+        dropbasket() {
+            this.$store.dispatch('basket/drop_basket');
+        },
     },
     computed: {
         ...mapGetters({
             getItemList: "basket/getItemList",
+            getTotalSum: "basket/getTotalSum",
         }),
+    },
+    watch: {
+        getItemList(newValue) {
+            return newValue
+        },
+        getTotalSum(newValue) {
+            return newValue
+        },
     },
 }
 </script>
 
 <style lang="scss" scoped>
-.product{
+
+.curp{
     cursor: pointer;
 }
-    
+
+.total-sum{
+    width: 75%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.product {
+    cursor: pointer;
+
+    &_title {
+        width: 60%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    &_counter {
+        width: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &_price {
+        width: 30%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &-item{
+        transition: .3s;
+        &:hover{
+            background-color: rgba($color: #000000, $alpha: .3);
+        }
+    }
+}
 </style>
