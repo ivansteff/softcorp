@@ -127,11 +127,11 @@ export default {
             return Math.floor(Math.random() * (max - min + 1) + min);
         };
 
-        setInterval(() => {
-            dollar_rate = randomNumber(20, 40);
-            products = []
-            computedList()
-        }, 5000);
+        // setInterval(() => {
+        //     dollar_rate = randomNumber(20, 40);
+        //     products = []
+        //     computedList()
+        // }, 5000);
 
         return {
             products: products,
@@ -172,7 +172,6 @@ export default {
             return newValue
         },
         dollar_rate(newValue) {
-            console.log(`dollar_rate -> newValue`, newValue)
             return newValue
         },
     },
