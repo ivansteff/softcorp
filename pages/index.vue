@@ -103,7 +103,7 @@ export default {
         var products = []
         var groups = []
         var groups_counter = []
-        let dollar_rate = 2.55
+        var dollar_rate = 2.55
 
         function computedList() {
             dataValue.forEach((dv, index) => {
@@ -122,6 +122,16 @@ export default {
             groups_counter = [...Array(groups.length).keys()]
         }
         await computedList()
+
+        var randomNumber = function (min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        };
+
+        setInterval(() => {
+            dollar_rate = randomNumber(20, 40);
+            products = []
+            computedList()
+        }, 5000);
 
         return {
             products: products,
@@ -153,6 +163,16 @@ export default {
             return newValue
         },
         getTotalSum(newValue) {
+            return newValue
+        },
+        products(newValue) {
+            return newValue
+        },
+        groups(newValue) {
+            return newValue
+        },
+        dollar_rate(newValue) {
+            console.log(`dollar_rate -> newValue`, newValue)
             return newValue
         },
     },

@@ -8,6 +8,7 @@ export const actions = {
         return item.T == payload.T
     })
     if (fined !== -1) {
+        console.log(`fined`, fined)
         context.commit('INCREMENT_ITEM', fined)
     } else {
         let a = payload
