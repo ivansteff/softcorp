@@ -76,8 +76,11 @@
                                 ({{product.P}})
                             </span>
                         </div>
-                        <span>
-                            {{product.C}} $
+                        <span  :class="{'up': product.current_price > product.prev_price, 'down': product.current_price < product.prev_price}"  class="d-flex flex-row align-center">
+                            {{product.current_price.toFixed(2)}} BYN
+                            <v-icon v-if="product.prev_price" :color="product.current_price > product.prev_price ? 'red' : 'green'" >
+                                {{product.current_price > product.prev_price ? 'expand_less' : 'expand_more'}}
+                            </v-icon>
                         </span>
                     </div>
                 </div>
@@ -103,7 +106,7 @@ export default {
         var products = []
         var groups = []
         var groups_counter = []
-        var dollar_rate = 2.55
+        var dollar_rate = Math.random() * (80 - 20 + 1) + 20
 
         function computedList() {
             dataValue.forEach((dv, index) => {
@@ -113,6 +116,7 @@ export default {
                 item.name = names[item.G].B[item.T].N
                 item.group_name = names[item.G].G
                 item.current_price = item.C * dollar_rate
+                item.current_price.toFixed(2)
                 item.previos_price = 0
                 if (!(groups.includes(item.group_name))) {
                     groups.push(item.group_name)
@@ -123,15 +127,16 @@ export default {
         }
         await computedList()
 
-        var randomNumber = function (min, max) {
-            return Math.floor(Math.random() * (max - min + 1) + min);
-        };
-
-        // setInterval(() => {
-        //     dollar_rate = randomNumber(20, 40);
-        //     products = []
-        //     computedList()
-        // }, 5000);
+        setInterval(() => {
+            console.log('update $ rate');
+            dataValue.forEach((dv, index) => {
+                dollar_rate = Math.random() * (80 - 20 + 1) + 20
+                let find = products.find(item => item.T === dv.T)
+                find.prev_price = find.current_price
+                find.current_price = dv.C * dollar_rate
+                find.current_price.toFixed(2)
+            })
+        }, 5000);
 
         return {
             products: products,
@@ -166,6 +171,7 @@ export default {
             return newValue
         },
         products(newValue) {
+            console.log(`products -> newValue`, newValue)
             return newValue
         },
         groups(newValue) {
@@ -179,6 +185,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.up{
+    color: red;
+    border-radius: 2px;
+}
+
+.down{
+    color: greenyellow;
+    border-radius: 2px;
+}
+
 .curp {
     cursor: pointer;
 }

@@ -8,8 +8,9 @@ export const actions = {
         return item.T == payload.T
     })
     if (fined !== -1) {
-        console.log(`fined`, fined)
-        context.commit('INCREMENT_ITEM', fined)
+        if (context.state.items_list[fined].P !== context.state.items_list[fined].quantity_in_basket) {
+          context.commit('INCREMENT_ITEM', fined) 
+        }
     } else {
         let a = payload
         a.quantity_in_basket = 1
