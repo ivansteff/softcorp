@@ -7,9 +7,17 @@
                     Корзина
                 </div>
                 <div v-if="getItemList.length > 0" @click="dropbasket()" class="curp">
-                    <v-icon>
+                    <!-- <v-icon>
                         delete_forever
-                    </v-icon>
+                    </v-icon> -->
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-icon dark v-bind="attrs" v-on="on">
+                                delete_forever
+                            </v-icon>
+                        </template>
+                        <span>Очистка корзины</span>
+                    </v-tooltip>
                 </div>
             </v-card-title>
             <div v-if="getItemList.length > 0">
@@ -29,13 +37,19 @@
                         {{product.name}}
                     </div>
                     <div class="product_counter">
+                        <v-icon class="curp" @click="decrement_product(index)">
+                            remove
+                        </v-icon>
                         {{product.quantity_in_basket}} шт.
+                        <v-icon class="curp" @click="increment_product(index)">
+                            add
+                        </v-icon>
                     </div>
                     <div class="product_price justify-space-between">
                         <div>
                             {{product.current_price.toFixed(2)}} / шт.
                         </div>
-                        <div class="delete-product curp" @click="decrementProduct(index)">
+                        <div class="delete-product curp" @click="drop_product(index)">
                             Удалить
                         </div>
                     </div>
@@ -43,7 +57,7 @@
                 <v-divider />
                 <div class="d-flex flex-row justify-space-between px-4 py-3">
                     <div>
-                        Курс доллара: 1$ = {{dollar_rate}} BYN
+                        Курс доллара: 1$ = {{dollar_rates.toFixed(2)}} BYN
                     </div>
                     <div>
                         Итого : {{getTotalSum}} BYN
@@ -76,9 +90,9 @@
                                 ({{product.P}})
                             </span>
                         </div>
-                        <span  :class="{'up': product.current_price > product.prev_price, 'down': product.current_price < product.prev_price}"  class="d-flex flex-row align-center">
+                        <span :class="{'up': product.current_price > product.prev_price, 'down': product.current_price < product.prev_price}" class="d-flex flex-row align-center">
                             {{product.current_price.toFixed(2)}} BYN
-                            <v-icon v-if="product.prev_price" :color="product.current_price > product.prev_price ? 'red' : 'green'" >
+                            <v-icon v-if="product.prev_price" :color="product.current_price > product.prev_price ? 'red' : 'green'">
                                 {{product.current_price > product.prev_price ? 'expand_less' : 'expand_more'}}
                             </v-icon>
                         </span>
@@ -98,7 +112,7 @@ import {
 } from "vuex";
 export default {
     async asyncData({
-        req,
+        app,req
     }) {
         var data = await getData()
         var names = await getNames()
@@ -106,7 +120,7 @@ export default {
         var products = []
         var groups = []
         var groups_counter = []
-        var dollar_rate = Math.random() * (80 - 20 + 1) + 20
+        var dollar_rate = 2.55
 
         function computedList() {
             dataValue.forEach((dv, index) => {
@@ -127,31 +141,30 @@ export default {
         }
         await computedList()
 
-        setInterval(() => {
-            console.log('update $ rate');
-            dataValue.forEach((dv, index) => {
-                dollar_rate = Math.random() * (80 - 20 + 1) + 20
-                let find = products.find(item => item.T === dv.T)
-                find.prev_price = find.current_price
-                find.current_price = dv.C * dollar_rate
-                find.current_price.toFixed(2)
-            })
-        }, 5000);
-
         return {
-            products: products,
+            products,
             groups: groups,
             groups_counter: groups_counter,
             dollar_rate: dollar_rate,
         }
     },
+    data() {
+        return {
+            dollar_rates: 0,
+        }
+    },
     methods: {
         addToBasket(product) {
-            console.log(` addToBasket product`, product)
             this.$store.dispatch('basket/add_to_basket', product);
         },
-        decrementProduct(index) {
+        decrement_product(index) {
             this.$store.dispatch('basket/decrement_product', index);
+        },
+        increment_product(index) {
+            this.$store.dispatch('basket/increment_product', index);
+        },
+        drop_product(index) {
+            this.$store.dispatch('basket/drop_product', index);
         },
         dropbasket() {
             this.$store.dispatch('basket/drop_basket');
@@ -163,20 +176,32 @@ export default {
             getTotalSum: "basket/getTotalSum",
         }),
     },
+    mounted() {
+        this.dollar_rates = this.dollar_rate
+        setInterval(() => {
+            this.products.forEach((dv, index) => {
+                this.dollar_rates = Math.random() * (80 - 20 + 1) + 20
+                let find = this.products.find(item => item.T === dv.T)
+                find.prev_price = find.current_price
+                find.current_price = dv.C * this.dollar_rates
+                find.current_price.toFixed(2)
+            })
+        }, 5000);
+    },
     watch: {
-        getItemList(newValue) {
-            return newValue
-        },
-        getTotalSum(newValue) {
-            return newValue
-        },
-        products(newValue) {
-            console.log(`products -> newValue`, newValue)
-            return newValue
-        },
-        groups(newValue) {
-            return newValue
-        },
+        // getItemList(newValue) {
+        //     return newValue
+        // },
+        // getTotalSum(newValue) {
+        //     return newValue
+        // },
+        // products(newValue) {
+        //     console.log(`products -> newValue`, newValue)
+        //     return newValue
+        // },
+        // groups(newValue) {
+        //     return newValue
+        // },
         dollar_rate(newValue) {
             return newValue
         },
@@ -185,13 +210,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-.up{
+.up {
     color: red;
     border-radius: 2px;
 }
 
-.down{
+.down {
     color: greenyellow;
     border-radius: 2px;
 }
