@@ -47,7 +47,7 @@ export default {
     },
     methods: {
         addToBasket(product) {
-            this.$store.dispatch('basket/add_to_basket', product);
+            this.$store.dispatch('basket/add_to_basket', Object.assign({},product));
         },
     },
 }

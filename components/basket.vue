@@ -60,7 +60,7 @@
                 </div>
             </div>
         </div>
-        <div v-else class="px-4">
+        <div v-else class="px-4 pb-5">
             Корзина пуста
         </div>
     </v-card>

@@ -60,17 +60,14 @@ export default {
     },
     mounted() {
         setInterval(() => {
-            let a=[];
-            Object.assign(a, this.products)
-            let res = a.forEach((dv, index) => {
+            this.products.forEach((dv, index) => {
                 this.dollar_rate = Math.random() * (80 - 20 + 1) + 20
-                let find = a.find(item => item.T === dv.T)
+                let find = this.products.find(item => item.T === dv.T)
                 find.prev_price = find.current_price
                 find.current_price = dv.C * this.dollar_rate
                 find.current_price.toFixed(2)
             })
-            this.products = a
-        }, 5000);
+        }, 15000);
     },
 }
 </script>
