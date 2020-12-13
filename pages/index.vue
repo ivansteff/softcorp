@@ -6,8 +6,8 @@
 </template>
 
 <script>
-const getData = () => import('~/task/data.json').then(m => m.default || m)
-const getNames = () => import('~/task/names.json').then(m => m.default || m)
+const getData = () => import('~/assets/data.json').then(m => m.default || m)
+const getNames = () => import('~/assets/names.json').then(m => m.default || m)
 
 import basket from '@/components/basket'
 import catalog from '@/components/catalog'
