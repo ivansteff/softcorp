@@ -33,13 +33,18 @@
                     {{product.name}}
                 </div>
                 <div class="product_counter">
-                    <v-icon class="curp" @click="decrement_product(index)">
-                        remove
-                    </v-icon>
-                    {{product.quantity_in_basket}} шт.
-                    <v-icon class="curp" @click="increment_product(index)">
-                        add
-                    </v-icon>
+                    <div>
+                        <v-icon class="curp" @click="decrement_product(index)">
+                            remove
+                        </v-icon>
+                        {{product.quantity_in_basket}} шт.
+                        <v-icon class="curp" @click="increment_product(index)">
+                            add
+                        </v-icon>
+                    </div>
+                    <div v-if="product.P == product.quantity_in_basket" class='caption count-limited'>
+                        Количество ограничено
+                    </div>
                 </div>
                 <div class="product_price justify-space-between">
                     <div>
@@ -73,7 +78,7 @@ import {
 } from "vuex";
 export default {
     props: {
-        dollar_rate:Number,
+        dollar_rate: Number,
     },
     methods: {
         decrement_product(index) {

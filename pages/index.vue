@@ -65,12 +65,17 @@ export default {
                 find.current_price = dv.C * this.dollar_rate
                 find.current_price.toFixed(2)
             })
-        }, 15000);
+        }, 5000);
     },
 }
 </script>
 
 <style lang="scss">
+
+.count-limited{
+    color: orange;
+}
+
 .up {
     color: red;
     border-radius: 2px;
@@ -104,8 +109,10 @@ export default {
     &_counter {
         width: 20%;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
+        
     }
 
     &_price {
