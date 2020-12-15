@@ -4,14 +4,14 @@
         Каталог
     </h1>
     <v-expansion-panels v-model="groups_counter" multiple>
-        <v-expansion-panel v-for="(group,gindex) in groups" :key="`groups-${gindex}`">
+        <v-expansion-panel v-for="(group,gindex) in groupsList" :key="`groups-${gindex}`">
             <v-expansion-panel-header>
                 <h3>
                     {{group}}
                 </h3>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-                <div v-for="(product,pindex) in products" :key="`products-${pindex}`" @click="addToBasket(product)" class="product">
+                <div v-for="(product,pindex) in productsList" :key="`products-${pindex}`" @click="addToBasket(product)" class="product">
                     <div v-if="group == product.group_name" class="d-flex flex-row align-center justify-space-between pa-3 product-item">
                         <div class="d-flex flex-row align-center">
                             <h4>
@@ -55,6 +55,14 @@ export default {
     methods: {
         addToBasket(product) {
             this.$store.dispatch('basket/add_to_basket', Object.assign({},product));
+        },
+    },
+    computed: {
+        groupsList(){
+            return this.groups
+        },
+        productsList(){
+            return this.products
         },
     },
 }

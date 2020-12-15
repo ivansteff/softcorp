@@ -100,9 +100,6 @@ export default {
             getTotalSum: "basket/getTotalSum",
         }),
     },
-    mounted() {
-
-    },
     watch: {
         getItemList(newValue) {
             return newValue
