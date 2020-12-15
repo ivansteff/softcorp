@@ -43,7 +43,14 @@ export default {
     props: {
         groups:Array,
         products:Array,
-        groups_counter:Array,
+    },
+    data() {
+        return {
+            groups_counter: [],
+        }
+    },
+    mounted() {
+        this.groups_counter = [...Array(this.groups.length).keys()]
     },
     methods: {
         addToBasket(product) {

@@ -1,7 +1,7 @@
 <template>
 <div>
     <basket :dollar_rate="dollar_rate"/>
-    <catalog :products="this.products" :groups="this.groups" :groups_counter="this.groups_counter" />
+    <catalog :products="this.products" :groups="this.groups" />
 </div>
 </template>
 
@@ -29,7 +29,6 @@ export default {
         var dataValue = data.Value.Goods
         var products = []
         var groups = []
-        var groups_counter = []
         var dollar_rate = 2.55
 
         function computedList() {
@@ -47,17 +46,16 @@ export default {
                 }
                 products.push(item)
             })
-            groups_counter = [...Array(groups.length).keys()]
         }
         await computedList()
 
         return {
             products: products,
             groups: groups,
-            groups_counter: groups_counter,
             dollar_rate: dollar_rate,
         }
     },
+    
     mounted() {
         setInterval(() => {
             this.products.forEach((dv, index) => {
